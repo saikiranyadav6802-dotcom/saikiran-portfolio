@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>B. Sai Kiran — Video Editor & Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#050508; --surface:#0c0c12; --card:#10101a;
+  --gold:#c9a84c; --gold2:#f0d080; --gold3:#8a6a1e;
+  --cream:#f5efe0; --text:#ede8d8; --muted:#7a7460;
+  --border:rgba(201,168,76,0.12); --border2:rgba(201,168,76,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden;cursor:none;}
+
+/* Cursor */
+.cursor{width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.2s;}
+.cursor-ring{width:32px;height:32px;border:1px solid var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);opacity:0.6;}
+
+/* Grain */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:998;opacity:0.35;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:22px 64px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,5,8,0.97) 0%,transparent 100%);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.06);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--gold);letter-spacing:2px;}
+.nav-logo span{color:var(--cream);}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.3s;cursor:none;}
+.nav-links a:hover{color:var(--gold);}
+.nav-hire{padding:10px 28px;border:1px solid var(--gold3);color:var(--gold);font-size:12px;letter-spacing:2px;text-transform:uppercase;border-radius:2px;transition:all 0.3s;background:transparent;cursor:none;font-family:'Outfit',sans-serif;}
+.nav-hire:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+
+/* HIRE ME MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.modal-overlay.active{display:flex;}
+.modal-box{background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:48px;max-width:480px;width:90%;position:relative;animation:modalIn 0.4s ease;}
+@keyframes modalIn{from{opacity:0;transform:scale(0.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--muted);font-size:22px;cursor:none;transition:color 0.3s;}
+.modal-close:hover{color:var(--gold);}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--cream);margin-bottom:8px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:32px;letter-spacing:0.5px;}
+.modal-items{display:flex;flex-direction:column;gap:14px;}
+.modal-item{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:6px;text-decoration:none;color:var(--text);transition:all 0.3s;font-size:14px;}
+.modal-item:hover{border-color:var(--gold);background:rgba(201,168,76,0.06);transform:translateX(4px);}
+.modal-icon{width:36px;height:36px;background:rgba(201,168,76,0.1);border:1px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.modal-divider{width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:24px 0;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:140px 64px 100px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(201,168,76,0.06) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(201,168,76,0.04) 0%,transparent 60%);}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);background-size:80px 80px;}
+.hero-line{position:absolute;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.08),transparent);height:1px;width:100%;animation:scanLine 6s ease-in-out infinite;}
+.hero-line:nth-child(1){top:25%;animation-delay:0s;}
+.hero-line:nth-child(2){top:55%;animation-delay:2s;}
+.hero-line:nth-child(3){top:78%;animation-delay:4s;}
+@keyframes scanLine{0%,100%{opacity:0;transform:scaleX(0.3)}50%{opacity:1;transform:scaleX(1)}}
+
+.hero-content{position:relative;z-index:2;max-width:780px;}
+.hero-eyebrow{display:flex;align-items:center;gap:16px;margin-bottom:36px;animation:fadeUp 1s ease both;}
+.eyebrow-line{width:48px;height:1px;background:var(--gold);}
+.eyebrow-text{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(60px,9vw,118px);font-weight:300;line-height:0.9;letter-spacing:-2px;margin-bottom:8px;animation:fadeUp 1s ease 0.15s both;color:var(--cream);}
+.hero-name-bold{font-weight:600;color:var(--gold);display:block;font-style:italic;}
+.hero-role{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,3vw,30px);font-weight:300;font-style:italic;color:var(--muted);margin-bottom:28px;animation:fadeUp 1s ease 0.3s both;letter-spacing:1px;}
+.hero-desc{font-size:16px;line-height:1.8;color:var(--muted);max-width:480px;margin-bottom:48px;font-weight:300;animation:fadeUp 1s ease 0.45s both;}
+.hero-ctas{display:flex;gap:16px;animation:fadeUp 1s ease 0.6s both;}
+.btn-gold{padding:16px 40px;background:linear-gradient(135deg,var(--gold3),var(--gold),var(--gold2));color:#050508;text-decoration:none;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;border-radius:2px;transition:all 0.3s;box-shadow:0 0 40px rgba(201,168,76,0.2);display:inline-flex;align-items:center;gap:10px;}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(201,168,76,0.35);}
+.btn-ghost{padding:16px 40px;border:1px solid var(--border2);color:var(--gold);text-decoration:none;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;border-radius:2px;transition:all 0.3s;}
+.btn-ghost:hover{background:rgba(201,168,76,0.08);border-color:var(--gold);}
+
+.hero-right{position:absolute;right:64px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:32px;animation:fadeLeft 1s ease 0.75s both;z-index:2;}
+.hero-stat{text-align:right;padding-right:20px;border-right:1px solid var(--border2);}
+.hero-stat-num{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:600;color:var(--gold);line-height:1;}
+.hero-stat-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+.hero-scroll{position:absolute;bottom:40px;left:64px;display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;animation:fadeUp 1s ease 1s both;}
+.scroll-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.5)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeLeft{from{opacity:0;transform:translate(40px,-50%)}to{opacity:1;transform:translate(0,-50%)}}
+
+/* MARQUEE */
+.marquee-wrap{overflow:hidden;padding:22px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);}
+.marquee-track{display:flex;gap:48px;animation:marquee 25s linear infinite;width:max-content;}
+.marquee-item{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:24px;}
+.marquee-gem{color:var(--gold);font-style:normal;font-size:12px;}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section{padding:120px 64px;position:relative;}
+.sec-eyebrow{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.sec-eyebrow-line{width:32px;height:1px;background:var(--gold);}
+.sec-eyebrow-text{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,5vw,66px);font-weight:300;letter-spacing:-1px;line-height:1.05;color:var(--cream);margin-bottom:60px;}
+.sec-title em{font-style:italic;color:var(--gold);}
+.gold-divider{width:80px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:28px 0;}
+
+/* ABOUT */
+#about{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.about-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:100px;align-items:center;}
+.about-frame{aspect-ratio:4/5;background:var(--card);border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:100px;position:relative;overflow:hidden;}
+.about-frame::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,0.08),transparent 60%);}
+.about-corner{position:absolute;width:24px;height:24px;}
+.about-corner.tl{top:-1px;left:-1px;border-top:2px solid var(--gold);border-left:2px solid var(--gold);}
+.about-corner.tr{top:-1px;right:-1px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);}
+.about-corner.bl{bottom:-1px;left:-1px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold);}
+.about-corner.br{bottom:-1px;right:-1px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);}
+.about-badge{position:absolute;bottom:24px;left:-24px;background:linear-gradient(135deg,var(--gold3),var(--gold));color:#050508;padding:14px 20px;border-radius:4px;font-size:12px;font-weight:600;letter-spacing:1px;box-shadow:0 8px 32px rgba(201,168,76,0.3);}
+.about-text p{font-size:16px;line-height:1.9;color:var(--muted);margin-bottom:18px;font-weight:300;}
+.about-text p strong{color:var(--text);font-weight:500;}
+.about-details{margin:28px 0;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.detail-item{padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:4px;}
+.detail-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.detail-value{font-size:14px;color:var(--text);}
+.tools-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+.tool-pill{padding:7px 18px;background:transparent;border:1px solid var(--border);border-radius:2px;font-size:12px;color:var(--muted);letter-spacing:1px;transition:all 0.3s;text-transform:uppercase;}
+.tool-pill:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.06);}
+
+/* SERVICES */
+.services-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--border);border:1px solid var(--border);}
+.service-card{background:var(--bg);padding:48px 40px;transition:background 0.4s;position:relative;overflow:hidden;cursor:none;}
+.service-card:hover{background:var(--card);}
+.service-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.4s;}
+.service-card:hover::after{opacity:1;}
+.service-num{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--border2);line-height:1;margin-bottom:20px;transition:color 0.4s;}
+.service-card:hover .service-num{color:rgba(201,168,76,0.18);}
+.service-icon{font-size:32px;margin-bottom:16px;display:block;}
+.service-name{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--cream);margin-bottom:10px;letter-spacing:-0.5px;}
+.service-desc{font-size:14px;line-height:1.8;color:var(--muted);font-weight:300;}
+
+/* PROJECTS */
+#projects{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+
+/* Bot project — video beside description */
+.bot-project{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--card);border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-bottom:24px;}
+.bot-video-side{background:#000;position:relative;min-height:340px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.bot-video-side video{width:100%;height:100%;object-fit:cover;display:block;}
+.video-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:32px;text-align:center;}
+.video-placeholder span{font-size:52px;}
+.video-placeholder p{font-size:13px;color:var(--muted);line-height:1.6;}
+.bot-info-side{padding:40px;display:flex;flex-direction:column;justify-content:center;}
+.bot-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.b-tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.15);padding:4px 12px;border-radius:2px;}
+.bot-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--cream);letter-spacing:-0.5px;margin-bottom:12px;}
+.bot-desc{font-size:14px;color:var(--muted);line-height:1.8;font-weight:300;margin-bottom:28px;}
+.bot-btns{display:flex;flex-direction:column;gap:10px;}
+.bot-btn{display:inline-flex;align-items:center;gap:10px;color:var(--gold);font-size:12px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 20px;border:1px solid var(--border2);border-radius:2px;transition:all 0.3s;}
+.bot-btn:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+
+.other-projects{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.project-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:all 0.4s;cursor:none;}
+.project-card:hover{border-color:var(--border2);transform:translateY(-4px);}
+.project-thumb{height:160px;display:flex;align-items:center;justify-content:center;font-size:44px;}
+.pt-2{background:linear-gradient(135deg,#001220,#2b86c522);}
+.pt-3{background:linear-gradient(135deg,#0d1a00,#4caf5022);}
+.project-info{padding:28px;}
+.p-tags{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.p-tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.15);padding:4px 12px;border-radius:2px;}
+.project-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--cream);margin-bottom:8px;}
+.project-desc{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300;}
+
+/* CONTACT */
+#contact{background:var(--bg);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;}
+.contact-left h3{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;font-style:italic;color:var(--cream);margin-bottom:14px;}
+.contact-left p{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:36px;font-weight:300;}
+.contact-items{display:flex;flex-direction:column;gap:12px;}
+.contact-item{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--text);transition:all 0.3s;font-size:14px;cursor:none;}
+.contact-item:hover{border-color:var(--gold);background:rgba(201,168,76,0.05);transform:translateX(6px);}
+.c-icon{width:36px;height:36px;background:rgba(201,168,76,0.1);border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+
+.contact-form{display:flex;flex-direction:column;gap:14px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fg{display:flex;flex-direction:column;gap:7px;}
+.fg label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+.fg input,.fg textarea,.fg select{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:13px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border-color 0.3s;resize:none;-webkit-appearance:none;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--gold);}
+.fg textarea{height:110px;}
+.fg select option{background:var(--card);color:var(--text);}
+.form-btn{padding:16px;background:linear-gradient(135deg,var(--gold3),var(--gold));color:#050508;border:none;border-radius:4px;font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;font-family:'Outfit',sans-serif;cursor:none;transition:all 0.3s;box-shadow:0 0 30px rgba(201,168,76,0.2);}
+.form-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,0.35);}
+
+/* FOOTER */
+footer{padding:36px 64px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface);}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-weight:600;letter-spacing:2px;}
+.footer-copy{font-size:12px;color:var(--muted);letter-spacing:1px;}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:1px;transition:color 0.3s;cursor:none;}
+.footer-links a:hover{color:var(--gold);}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.9s ease,transform 0.9s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:0.1s;}.rd2{transition-delay:0.2s;}.rd3{transition-delay:0.3s;}
+
+/* Toast */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--gold);color:var(--gold);padding:14px 32px;border-radius:4px;font-size:13px;letter-spacing:1px;z-index:999;transition:transform 0.4s ease;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+@media(max-width:900px){
+  nav{padding:16px 20px;}
+  section{padding:72px 20px;}
+  #hero{padding:110px 20px 80px;}
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:40px;}
+  .services-grid{grid-template-columns:1fr;}
+  .bot-project{grid-template-columns:1fr;}
+  .other-projects{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  .form-row{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:14px;text-align:center;}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- HIRE ME MODAL -->
+<div class="modal-overlay" id="hireModal">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-title">Hire Sai Kiran</div>
+    <div class="modal-sub">Get in touch — I'm available for freelance work</div>
+    <div class="modal-divider"></div>
+    <div class="modal-items">
+      <a href="tel:9533949717" class="modal-item">
+        <div class="modal-icon">📞</div>
+        +91 9533949717
+      </a>
+      <a href="mailto:saikiranyadav3377@gmail.com" class="modal-item">
+        <div class="modal-icon">✉</div>
+        saikiranyadav3377@gmail.com
+      </a>
+      <a href="https://wa.me/919533949717" target="_blank" class="modal-item">
+        <div class="modal-icon">💬</div>
+        WhatsApp Me
+      </a>
+      <a href="https://t.me/JobHireIndiaBot" target="_blank" class="modal-item">
+        <div class="modal-icon">🤖</div>
+        @JobHireIndiaBot — Telegram
+      </a>
+      <a href="https://job-hire-india-web-production.up.railway.app/" target="_blank" class="modal-item">
+        <div class="modal-icon">🌐</div>
+        Visit My Job Portal
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✦ Redirecting to WhatsApp...</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SK<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="javascript:void(0)" onclick="smoothScroll('about')">About</a></li>
+    <li><a href="javascript:void(0)" onclick="smoothScroll('services')">Services</a></li>
+    <li><a href="javascript:void(0)" onclick="smoothScroll('projects')">Projects</a></li>
+    <li><a href="javascript:void(0)" onclick="smoothScroll('contact')">Contact</a></li>
+  </ul>
+  <button class="nav-hire" id="hireBtn">Hire Me ✦</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-line"></div>
+  <div class="hero-line"></div>
+  <div class="hero-line"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Available for Freelance</span>
+    </div>
+    <h1 class="hero-name">
+      B. Sai
+      <span class="hero-name-bold">Kiran</span>
+    </h1>
+    <p class="hero-role">Video Editor & Creative Designer</p>
+    <p class="hero-desc">Crafting compelling visual stories through expert video editing, AI-powered poster design, and social media content — based in Achampet.</p>
+    <div class="hero-ctas">
+      <a href="javascript:void(0)" class="btn-gold" onclick="smoothScroll('projects')">View My Work ↓</a>
+      <a href="javascript:void(0)" class="btn-ghost" onclick="smoothScroll('contact')">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stat"><div class="hero-stat-num">2+</div><div class="hero-stat-label">Years Exp</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">50+</div><div class="hero-stat-label">Projects</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">4</div><div class="hero-stat-label">Services</div></div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-dot"></div>Scroll to explore</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Video Editing <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Poster Design <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">AI Tools Expert <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Social Media <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">CapCut <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Premiere Pro <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Canva Expert <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Document Design <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Video Editing <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Poster Design <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">AI Tools Expert <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Social Media <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">CapCut <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Premiere Pro <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Canva Expert <span class="marquee-gem">✦</span></div>
+    <div class="marquee-item">Document Design <span class="marquee-gem">✦</span></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="about-frame">
+        🎬
+        <div class="about-corner tl"></div>
+        <div class="about-corner tr"></div>
+        <div class="about-corner bl"></div>
+        <div class="about-corner br"></div>
+      </div>
+      <div class="about-badge">✦ ECE Graduate</div>
+    </div>
+    <div class="reveal rd1">
+      <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">About Me</span></div>
+      <h2 class="sec-title">The Creative<br/><em>Behind the Frame</em></h2>
+      <p>I'm <strong>B. Sai Kiran</strong>, an intermediate video editor and poster designer with a passion for creating visually stunning content using the latest <strong>AI-powered tools</strong>.</p>
+      <p>With <strong>2 years of hands-on experience</strong>, I've worked across video production, social media management, and document design — helping clients and organisations tell their story with impact.</p>
+      <p>Beyond creative work, I also built <strong>@JobHireIndiaBot</strong> — a Telegram bot delivering live job listings from top platforms directly to job seekers across India.</p>
+      <div class="gold-divider"></div>
+      <div class="about-details">
+        <div class="detail-item"><div class="detail-label">Location</div><div class="detail-value">Achampet, India</div></div>
+        <div class="detail-item"><div class="detail-label">Experience</div><div class="detail-value">2+ Years</div></div>
+        <div class="detail-item"><div class="detail-label">Education</div><div class="detail-value">B.Tech — ECE</div></div>
+        <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value" style="color:var(--gold)">✦ Available</div></div>
+      </div>
+      <div class="tools-row">
+        <span class="tool-pill">Canva</span>
+        <span class="tool-pill">CapCut</span>
+        <span class="tool-pill">Premiere Pro</span>
+        <span class="tool-pill">AI Tools</span>
+        <span class="tool-pill">Python</span>
+        <span class="tool-pill">Telegram API</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="reveal">
+    <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">What I Offer</span></div>
+    <h2 class="sec-title">My <em>Services</em></h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <span class="service-icon">🎬</span>
+      <div class="service-name">Video Editing</div>
+      <div class="service-desc">Professional video editing for reels, YouTube, promos and social media using CapCut and Premiere Pro — fast cuts, smooth transitions, colour grading and motion effects.</div>
+    </div>
+    <div class="service-card reveal rd1">
+      <div class="service-num">02</div>
+      <span class="service-icon">🎨</span>
+      <div class="service-name">Poster Design</div>
+      <div class="service-desc">Eye-catching poster and banner designs using Canva and AI tools — from social media graphics to event posters and promotional materials.</div>
+    </div>
+    <div class="service-card reveal rd2">
+      <div class="service-num">03</div>
+      <span class="service-icon">📱</span>
+      <div class="service-name">Social Media Operator</div>
+      <div class="service-desc">Complete social media management for schools, businesses and organisations — handling Instagram, Facebook and YouTube content creation and posting.</div>
+    </div>
+    <div class="service-card reveal rd3">
+      <div class="service-num">04</div>
+      <span class="service-icon">📄</span>
+      <div class="service-name">Document Editor</div>
+      <div class="service-desc">Professional document editing and design — reports, resumes, presentations and formatted documents that look polished and ready to impress.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="reveal">
+    <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">My Work</span></div>
+    <h2 class="sec-title">Featured <em>Projects</em></h2>
+  </div>
+
+  <!-- Bot project with video beside -->
+  <div class="bot-project reveal">
+    <div class="bot-video-side">
+      <video controls playsinline style="width:100%;height:100%;object-fit:cover;display:block;max-height:400px;">
+        <source src="job_bot_finalss.mp4" type="video/mp4"/>
+        <div class="video-placeholder">
+          <span>🎬</span>
+          <p>Bot Demo Video<br/><span style="color:var(--gold)">@JobHireIndiaBot</span></p>
+        </div>
+      </video>
+    </div>
+    <div class="bot-info-side">
+      <div class="bot-tags">
+        <span class="b-tag">Telegram Bot</span>
+        <span class="b-tag">Python</span>
+        <span class="b-tag">Live Jobs</span>
+      </div>
+      <div class="bot-name">JobHireIndia Bot</div>
+      <div class="bot-desc">A powerful Telegram bot that aggregates live job listings from Indeed, LinkedIn, and more — delivering real-time job opportunities with full details directly to users across India. Built entirely by B. Sai Kiran.</div>
+      <div class="bot-btns">
+        <a href="https://t.me/JobHireIndiaBot" target="_blank" class="bot-btn">🤖 Open Telegram Bot →</a>
+        <a href="https://job-hire-india-web-production.up.railway.app/" target="_blank" class="bot-btn">🌐 Visit Job Portal →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Other projects -->
+  <div class="other-projects" style="margin-top:24px;">
+    <div class="project-card reveal rd1">
+      <div class="project-thumb pt-2">🌐</div>
+      <div class="project-info">
+        <div class="p-tags"><span class="p-tag">Web App</span><span class="p-tag">Railway</span></div>
+        <div class="project-name">Job Hire India — Website</div>
+        <div class="project-desc">Live job portal built and deployed on Railway — giving users browser access to fresh job listings from top platforms.</div>
+      </div>
+    </div>
+    <div class="project-card reveal rd2">
+      <div class="project-thumb pt-3">🎬</div>
+      <div class="project-info">
+        <div class="p-tags"><span class="p-tag">Video Editing</span><span class="p-tag">Social Media</span></div>
+        <div class="project-name">Social Media Content</div>
+        <div class="project-desc">Managing and creating video content and posts for schools and organisations on Instagram, Facebook, and YouTube.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <div class="sec-eyebrow"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">Get In Touch</span></div>
+    <h2 class="sec-title">Let's Create<br/><em>Something Great</em></h2>
+  </div>
+  <div class="contact-grid">
+    <div class="reveal">
+      <h3>Ready to work together?</h3>
+      <p>Whether you need a video edited, a stunning poster designed, or your social media managed — I'm here to help. Reach out directly!</p>
+      <div class="contact-items">
+        <a href="tel:9533949717" class="contact-item"><div class="c-icon">📞</div>+91 9533949717</a>
+        <a href="mailto:saikiranyadav3377@gmail.com" class="contact-item"><div class="c-icon">✉</div>saikiranyadav3377@gmail.com</a>
+        <a href="https://wa.me/919533949717" target="_blank" class="contact-item"><div class="c-icon">💬</div>WhatsApp Me Directly</a>
+        <a href="https://t.me/JobHireIndiaBot" target="_blank" class="contact-item"><div class="c-icon">🤖</div>@JobHireIndiaBot — Telegram</a>
+      </div>
+    </div>
+    <div class="contact-form reveal rd1">
+      <div class="form-row">
+        <div class="fg"><label>Your Name</label><input type="text" id="fname" placeholder="Your full name"/></div>
+        <div class="fg"><label>Phone</label><input type="tel" id="fphone" placeholder="+91 XXXXX XXXXX"/></div>
+      </div>
+      <div class="fg"><label>Email</label><input type="email" id="femail" placeholder="your@email.com"/></div>
+      <div class="fg">
+        <label>Service Needed</label>
+        <select id="fservice">
+          <option value="">Select a service...</option>
+          <option>Video Editing</option>
+          <option>Poster Design</option>
+          <option>Social Media Management</option>
+          <option>Document Editing</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label>Message</label><textarea id="fmessage" placeholder="Tell me about your project..."></textarea></div>
+      <button class="form-btn" id="sendBtn">Send via WhatsApp ✦</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">B. Sai Kiran</div>
+  <div class="footer-copy">© 2026 — All Rights Reserved</div>
+  <div class="footer-links">
+    <a href="javascript:void(0)" onclick="smoothScroll('about')">About</a>
+    <a href="javascript:void(0)" onclick="smoothScroll('services')">Services</a>
+    <a href="javascript:void(0)" onclick="smoothScroll('projects')">Projects</a>
+    <a href="javascript:void(0)" onclick="smoothScroll('contact')">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Smooth scroll
+function smoothScroll(id){
+  event && event.preventDefault();
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+
+// Cursor
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.1; ry+=(my-ry)*0.1;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a,button,.service-card,.project-card,.bot-project').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2)';ring.style.transform='translate(-50%,-50%) scale(1.5)';});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.transform='translate(-50%,-50%) scale(1)';});
+});
+
+// Hire Me Modal
+const hireBtn=document.getElementById('hireBtn');
+const modal=document.getElementById('hireModal');
+const modalClose=document.getElementById('modalClose');
+hireBtn.addEventListener('click',()=>modal.classList.add('active'));
+modalClose.addEventListener('click',()=>modal.classList.remove('active'));
+modal.addEventListener('click',e=>{ if(e.target===modal) modal.classList.remove('active'); });
+
+// WhatsApp form submit
+document.getElementById('sendBtn').addEventListener('click',()=>{
+  const name=document.getElementById('fname').value||'Not provided';
+  const phone=document.getElementById('fphone').value||'Not provided';
+  const email=document.getElementById('femail').value||'Not provided';
+  const service=document.getElementById('fservice').value||'Not specified';
+  const message=document.getElementById('fmessage').value||'No message';
+  const text=`Hi Sai Kiran! 👋%0A%0A*New Portfolio Enquiry*%0A%0A*Name:* ${encodeURIComponent(name)}%0A*Phone:* ${encodeURIComponent(phone)}%0A*Email:* ${encodeURIComponent(email)}%0A*Service:* ${encodeURIComponent(service)}%0A*Message:* ${encodeURIComponent(message)}`;
+  const toast=document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3000);
+  setTimeout(()=>window.open(`https://wa.me/919533949717?text=${text}`,'_blank'),800);
+});
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
